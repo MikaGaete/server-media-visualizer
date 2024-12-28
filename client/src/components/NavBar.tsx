@@ -19,7 +19,7 @@ export const NavBar = () => {
 
     return (
         <div
-            className={'w-full h-[10vh] flex justify-between bg-gradient-to-b from-[#f1f1f1] from-90% to-transparent px-8'}>
+            className={'fixed top-0 min-w-[100vw] w-full h-[10vh] flex justify-between bg-gradient-to-b from-[#f1f1f1] from-90% to-transparent px-8'}>
             <div className={'flex items-center justify-start gap-12'}>
                 <button className={'raleway-normal-600 text-xl'} onClick={handleClick}>MIKA'S MANAGEMENT TOOL</button>
                 <button name={'photos'} className={'raleway-normal-500 text-lg'} onClick={handleClick}>Photos</button>
