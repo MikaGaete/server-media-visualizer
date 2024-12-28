@@ -1,5 +1,5 @@
 import {createRoot} from 'react-dom/client'
+import {Router} from "./router/Router.tsx";
 import './index.css'
-import {Landing} from "./pages/Landing.tsx";
 
-createRoot(document.getElementById('root')!).render(<Landing/>);
+createRoot(document.getElementById('root')!).render(<Router/>);
