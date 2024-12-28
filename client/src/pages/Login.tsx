@@ -1,13 +1,13 @@
 import {Formik} from "formik";
 import {LoginErrors, LoginValues} from "../types/LoginTypes.tsx";
 import {CustomInput} from "../templates/CustomInput.tsx";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setCredentials} from "../store/thunks.ts";
 import {AppDispatch} from "../store/store.ts";
 import {useCookies} from "react-cookie";
 import {useEffect} from "react";
+import axios from "axios";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -90,7 +90,7 @@ export const Login = () => {
                                          error={errors.username} touched={touched.username} handleChange={handleChange}
                                          handleBlur={handleBlur} placeholder={'John Doe'}
                             />
-                            <CustomInput type={'text'} name={'password'} value={values.password} label={'Password'}
+                            <CustomInput type={'password'} name={'password'} value={values.password} label={'Password'}
                                          error={errors.password} touched={touched.password} handleChange={handleChange}
                                          handleBlur={handleBlur} placeholder={'Sup3rS3cr3tP4ssw0ord!'}
                             />
