@@ -1,10 +1,61 @@
 import {Formik} from "formik";
-import {LoginErrors} from "../types/LoginTypes.tsx";
+import {LoginErrors, LoginValues} from "../types/LoginTypes.tsx";
 import {CustomInput} from "../templates/CustomInput.tsx";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setCredentials} from "../store/thunks.ts";
+import {AppDispatch} from "../store/store.ts";
+import {useCookies} from "react-cookie";
+import {useEffect} from "react";
 
 export const Login = () => {
-    // TODO connect with the login api when available
-    // TODO saved necessary user data from the response on the store when available
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const [cookies, setCookie] = useCookies(['token']);
+
+    useEffect(() => {
+        if (cookies.token) {
+            handleCookie();
+        }
+    }, []);
+
+    const handleCookie = async () => {
+        try {
+            const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/users/auth`, null, {headers: {authorization: cookies.token}});
+
+            if (data.status === 200) {
+                dispatch(setCredentials(data.data.user));
+                navigate('/');
+            }
+            else alert("Something went wrong");
+        }
+        catch (error) {
+            console.log(error);
+            alert(error)
+        }
+    }
+
+    const handleSubmit = async ({username, password}: LoginValues) => {
+        try {
+            const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/users/auth`, {username, password});
+
+            if (data.status === 200) {
+                const {token, ...user} = data.data.user;
+
+                if (token) {
+                    setCookie('token', token, {path: '/'});
+                }
+                dispatch(setCredentials(user));
+                navigate('/');
+            }
+            else alert("Something went wrong");
+        }
+        catch (error) {
+            console.log(error);
+            alert(error)
+        }
+    }
 
     return (
         <div className={'bg-[#f1f1f1] w-screen min-h-screen flex flex-col justify-center items-center raleway-normal-400'}>
@@ -24,10 +75,9 @@ export const Login = () => {
 
                     return errors;
                 }}
-                onSubmit={(values, {setSubmitting}) => {
+                onSubmit={async (values, {setSubmitting}) => {
                     setTimeout(() => {setSubmitting(false)}, 400);
-                    console.log(values);
-                    //handleSubmit(values)
+                    await handleSubmit({...values})
                 }}
             >
                 {({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) => (
