@@ -3,9 +3,11 @@ import {ChangeEvent, useState} from "react";
 import {CustomButton} from "./CustomButton.tsx";
 import axios from "axios";
 import {FileInputProps} from "../types/FileInputTypes.tsx";
+import {useCookies} from "react-cookie";
 
 export const FileInput = ({ id, accept, endpoint }: FileInputProps) => {
     const [files, setFiles] = useState(0);
+    const [cookies] = useCookies(['token']);
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const target = event.target;
@@ -37,9 +39,13 @@ export const FileInput = ({ id, accept, endpoint }: FileInputProps) => {
             try {
                 await axios.post(`${import.meta.env.VITE_API_URL}/uploads/${endpoint}`, formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data',
+                        authorization: cookies.token
                     }
                 });
+
+                input.files = null;
+                setFiles(0);
             }
             catch (error) {
                 console.error(error);
