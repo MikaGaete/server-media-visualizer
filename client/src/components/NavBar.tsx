@@ -1,13 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { MouseEvent } from "react";
+import {CustomButton} from "../templates/CustomButton.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store.ts";
 
 export const NavBar = () => {
     const navigate = useNavigate();
-
-    // TODO add logic to get the loggedIn state when available
+    const {isLogged, username} = useSelector((state: RootState) => state.auth);
 
     const handleClick = (event: MouseEvent<HTMLElement>) => {
         event.preventDefault();
+
+        if (isLogged) {
+            return;
+        }
 
         const target = event.target as HTMLButtonElement;
 
@@ -27,8 +33,7 @@ export const NavBar = () => {
                 <button className={'raleway-normal-500 text-lg'}>More</button>
             </div>
             <div className={'flex items-center'}>
-                {/* TODO add alternative to the login button for when the user is already logged in */}
-                <button name={'login'} className={'bg-[#181818] text-white raleway-normal-400 px-8 py-2 rounded-2xl'} onClick={handleClick}>Log in</button>
+                <CustomButton text={isLogged ? username : 'Log in'} name={'login'} handleClick={handleClick}/>
             </div>
         </div>
     );
